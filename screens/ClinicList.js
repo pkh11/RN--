@@ -27,9 +27,10 @@ const DrawerScreen = ({ navigation }) => (
 function CustomHeader({ navigation }) {
     return (
         <View style={{ flexDirection: 'row', height: 50, borderWidth: 1, borderColor: 'red' }}>
-            <View style={{ flex: 1, borderColor: 'red', borderWidth: 1 }}></View>
+            <View style={{ flex: 1, borderColor: 'red', borderWidth: 1, justifyContent: 'center'}}>
+                <Text style={{ textAlign: 'flex-start',  marginLeft: 20  }}>번대기</Text>
+            </View>
             <View style={{ flex: 1.5, justifyContent: 'center', borderColor: 'red', borderWidth: 1 }}>
-                <Text style={{ textAlign: 'center' }}>번대기</Text>
             </View>
             <View style={{ flex: 1, justifyContent: 'center', borderColor: 'red', borderWidth: 1 }}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>

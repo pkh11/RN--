@@ -15,7 +15,7 @@ const PrivacyStackScreen = () => {
 
 export default function PrivacyView ({navigation}) {
     return(
-        <PrivacyStack.Navigator screenOptions={ {headerTitle: '개인정보처리방침', headerTitleAlign:'left', headerLeft: () => ( <Text onPress={ () => navigation.goBack() }> 뒤로 </Text> ) }}>
+        <PrivacyStack.Navigator screenOptions={ {headerTitle: '', headerTitleAlign:'left', headerLeft: () => ( <Text onPress={ () => navigation.goBack() }>개인정보처리방침</Text> ) }}>
             <PrivacyStack.Screen name="PrivacyStackScreen" component={ PrivacyStackScreen } />
         </PrivacyStack.Navigator>
     );

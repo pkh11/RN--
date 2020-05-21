@@ -98,7 +98,7 @@ export default function ClinicDetailView({ route, navigation }) {
                    <Text style={{ fontSize: 16, color:'#3BCE83', fontWeight: 'bold' }}> 0.4km</Text>
                </Section1Row>
                <Section1Row>
-                   <Text style={{ fontSize: 16, color: '#808080', marginRight:10}}>전화하기 </Text>
+                   <Text style={{ fontSize: 16, color: '#808080', marginRight:10}}>전화하기</Text>
                    <Text style={{ fontSize: 16, color: '#808080', marginLeft:10}}> 저장하기</Text>
                </Section1Row>
         </Section1View>,
