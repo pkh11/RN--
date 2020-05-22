@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList } from 'react-native';
+import React, { useState, useEffect, useRef  } from 'react';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, FlatList, Image } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import apiConfig from '../config/APIConfig';
@@ -26,30 +26,33 @@ const DrawerScreen = ({ navigation }) => (
 // custom header
 function CustomHeader({ navigation }) {
     return (
-        <View style={{ flexDirection: 'row', height: 50, borderWidth: 1, borderColor: 'red' }}>
+        <View style={{ flexDirection: 'row', height: 50, borderWidth: 1, borderColor: 'red'}}>
             <View style={{ flex: 1, borderColor: 'red', borderWidth: 1, justifyContent: 'center'}}>
-                <Text style={{ textAlign: 'flex-start',  marginLeft: 20  }}>번대기</Text>
+            
             </View>
-            <View style={{ flex: 1.5, justifyContent: 'center', borderColor: 'red', borderWidth: 1 }}>
+            <View style={{ flex: 1.5, justifyContent: 'center', alignItems:'center',borderColor: 'red', borderWidth: 1 }}>
+                <Image source={require('../resources/title/title.png')}></Image>
             </View>
-            <View style={{ flex: 1, justifyContent: 'center', borderColor: 'red', borderWidth: 1 }}>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems:'flex-end', borderColor: 'red', borderWidth: 1 }}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                    <Text style={{ textAlign: 'center' }}>메뉴</Text>
+                    <Image style={{marginRight:20, marginTop:16, marginBottom:16}} source={require('../resources/ic_menu/ic_menu.png')}></Image>
                 </TouchableOpacity>
             </View>
         </View>
     );
 }
 
-
-let ListItem = props => (
-    // <ListItem onPress={() => alert('detail')} />
-    <TouchableOpacity>
-        <View style={ {borderWidth:1, borderRadius:8, padding:8, margin:8} }>
-            <Text>{props.id}</Text>
+// 상단 Image 영역
+function ImageView() {
+    return(
+        <View style={{marginTop:16, marginLeft:28, marginRight:28, marginBottom:20, backgroundColor:'#F2F2F2'}}>
+            <Text style={{color:'#000000', fontWeight:'bold', fontSize:'24', alignItems:'flex-start'}}>
+                이제, 안심하고{"\n"}집에서 대기하세요.
+            </Text>
+            <Image style={{ marginTop:10, width:'100%', borderRadius:12}} source={require('../resources/img_illust/img_illust.png')}></Image>
         </View>
-    </TouchableOpacity>
-);
+    );
+}
 
 // clinic list
 function ListHomeScreen({ navigation }) {
@@ -70,23 +73,46 @@ function ListHomeScreen({ navigation }) {
         });
     };
 
+    const renderContent = () => [
+        <View style={{backgroundColor:'#FFFFFF', height:'100%'}}>
+            <View style={{backgroundColor:'#F2F2F2', flexDirection:'row',alignItems:'center', justifyContent: 'space-between', height:56, borderRadius:28, marginTop:36 ,marginLeft:20, marginRight:20, marginBottom:28}}>
+                <Text style={{marginLeft:20}}>서울시 종로구</Text>
+                <TouchableOpacity style={{marginRight:16}} onPress={() => alert('position')}>
+                    <Image source={require('../resources/ic_gps/ic_gps.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            <View style={{flexDirection:'row',alignItems:'center', justifyContent: 'space-between', fontSize:14, color:'#000000' ,height:17, marginLeft:20, marginRight:20, marginBottom:12}}>
+                <Text style={{fontWeight:'bold'}}>검색 결과 {list.length} 건</Text>
+                <Text onPress={() => alert('position')}>거리순</Text>
+            </View>
+            <FlatList style={{borderTopLeftRadius:12, borderTopRightRadius:12}} data={ list } renderItem={ ({ item }) => 
+                <TouchableOpacity style={{ marginLeft:20, marginRight:20}}onPress={ () =>  navigation.navigate("ClinicDetailView", { clinickInfo: item }) }>
+                    <View style={{borderWidth:1, borderColor:'#F2F2F2'}}/>
+                    <View style={ { borderRadius:8 } }>
+                        <View style={{marginTop:20, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                            <Text style={{fontWeight:'bold', color:'#0D0D0D', fontSize:18}}>대기자 5명</Text>
+                            <TouchableOpacity style={{width:60, height:32, backgroundColor:'#DEF7EB', borderRadius:6, alignItems:'center', justifyContent:'center'}} onPress={() => alert('줄서기')}>
+                                <Text style={{color:'#21D287'}}>줄서기</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={{marginTop:9, color:'#0D0D0D'}}>{item.clinicName}</Text>
+                        <Text style={{marginTop:4, marginBottom:20, color:'#4D4D4D'}}>{item.clinicLocation}</Text>
+                    </View>
+                </TouchableOpacity>}>
+            </FlatList> 
+        </View>
+        
+    ];
+   
     useEffect(() => {
         loadData();
     }, []);
 
     return (
-        <SafeAreaView>
+        <SafeAreaView style={{flex:1}}>
             <CustomHeader navigation={ navigation }></CustomHeader>
-            <FlatList data={ list } renderItem={ ({ item }) => 
-                <TouchableOpacity onPress={ () =>  navigation.navigate("ClinicDetailView", { clinickInfo: item }) }>
-                    <View style={ { borderWidth:1, borderRadius:8, padding:8, margin:8 } }>
-                        <Text>5명</Text>
-                        <Text>{item.clinicName}</Text>
-                        <Text>{item.clinicLocation}</Text>
-                    </View>
-                </TouchableOpacity>
-            }>
-            </FlatList> 
+            <ImageView/>
+            {renderContent()}
         </SafeAreaView>
     );
 }
@@ -100,17 +126,7 @@ function NotificationsScreen({ navigation }) {
 }
 
 export default function ClinicList () {
-
     return (
         <DrawerScreen/>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});

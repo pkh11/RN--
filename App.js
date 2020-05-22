@@ -5,8 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 
-import Login from './screens/Login';
 import SignIn from './screens/SignIn';
+import Login from './screens/Login';
 import ClinicList from './screens/ClinicList';
 import ClinicDetailView from './screens/ClinicDetailView';
 import Splash from "./screens/Splash";
@@ -16,8 +16,8 @@ const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
-    <AuthStack.Screen name="Login" component={ Login } options={ { title: 'Login info'} }/>
-    <AuthStack.Screen name="SignIn" component= { SignIn }/>
+    <AuthStack.Screen name="Login" component={ Login } options={ { headerShown: false} }/>
+    <AuthStack.Screen name="SignIn" component= { SignIn } options={ { headerBackTitle: "", headerTitle: ""} }/>
   </AuthStack.Navigator>
 );
 
@@ -29,7 +29,7 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(!isLoading);
-      setUser({});
+      // setUser({});
     }, 500);
   }, []);
 
