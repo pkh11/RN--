@@ -1,9 +1,8 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, AsyncStorage } from 'react-native';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 
 import SignIn from './screens/SignIn';
 import Login from './screens/Login';
@@ -29,7 +28,9 @@ export default function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(!isLoading);
-      // setUser({});
+      const getToken = AsyncStorage.getItem('token');
+      console.log('/////token'+getToken);
+      setUser({});
     }, 500);
   }, []);
 

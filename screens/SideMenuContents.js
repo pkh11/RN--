@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Switch } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Switch, TouchableOpacity, Image } from 'react-native';
 import styled from 'styled-components';
+import { DrawerActions } from '@react-navigation/native';
 
 
 const SectionView = styled.View`
@@ -56,10 +57,14 @@ export default function SideMenuContents ( {props, navigation} ) {
         <SafeAreaView style={{flex:1, flexDirection:'column', alignItems:'stretch'}}>
             <SectionView style={{flex:1}}>
                 <RowView>
-                    <Text style={{alignItems:'flex-start'}}>닫기</Text>
-                    <Text style={{alignItems:'flex-end'}}>공지사항</Text>
+                    <TouchableOpacity style={{alignItems:'flex-start'}} onPress={() => navigation.closeDrawer()}>
+                        <Image source={require('../resources/ic_close/ic_close.png')}></Image>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{alignItems:'flex-end'}}>
+                        <Image source={require('../resources/ic_alarm/ic_alarm.png')}></Image>
+                    </TouchableOpacity>
                 </RowView>
-                <NameText>홍길동</NameText>
+                <NameText>박균호</NameText>
                 <RowView>
                     <SectionContent>연결된 계정</SectionContent>
                     <SectionContent>카카오</SectionContent>

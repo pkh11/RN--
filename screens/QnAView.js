@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from "@react-navigation/stack";
 
 const QnAStack = createStackNavigator();
@@ -15,7 +15,10 @@ const QnAStackScreen = () => {
 
 export default function QnAView ({navigation}) {
     return(
-        <QnAStack.Navigator screenOptions={ {headerTitle: '문의하기', headerTitleAlign:'left', headerLeft: () => ( <Text onPress={ () => navigation.goBack() }> 뒤로 </Text> ) }}>
+        <QnAStack.Navigator screenOptions={ {headerTitle: '', headerLeft: () => ( <TouchableOpacity style={{flexDirection:'row', alignItems:'center'}} onPress={ () => navigation.goBack() }>
+        <Image source={require('../resources/ic_back/ic_back.png')}></Image>
+        <Text style={{fontSize:18}}>문의하기</Text>
+    </TouchableOpacity> ) }}>
             <QnAStack.Screen name="QnAStackScreen" component={ QnAStackScreen } />
         </QnAStack.Navigator>
     );
