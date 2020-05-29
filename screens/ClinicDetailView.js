@@ -1,7 +1,8 @@
-import React, { useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import { Modalize } from 'react-native-modalize';
 import styled from 'styled-components';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 
 const Container = styled.View`
     flex: 1;
@@ -39,6 +40,7 @@ const SectionContent = styled.Text`
     fontSize: 16;
     color: #0D0D0D;
     marginLeft: 16;
+    marginLeft: 16;
 `;
 const SectionContent2 = styled.Text`
     fontSize: 16;
@@ -62,6 +64,7 @@ const ButtonView = styled.TouchableOpacity`
 export default function ClinicDetailView({ route, navigation }) {
     const item = route.params.clinickInfo;
     const id = item.clinicId;
+    const clinicName = item.clinicName;
     const modalizeRef = useRef(null);
     const onOpen = () => {
         modalizeRef.current?.open();
@@ -84,8 +87,13 @@ export default function ClinicDetailView({ route, navigation }) {
   "clinicWaitCount": 2,
   "clinicWorkTime": null,
   */
+    const [showConfirm, setShowConfirm] = useState(false);
+    openConfirm = (show) => {
+        setShowConfirm(show);
+    }
+
     const footerButton = () => (
-        <ButtonView activeOpacity={0.75}>
+        <ButtonView activeOpacity={0.75} onPress={ () => {openConfirm(true)} }>
             <Text style={{fontSize:18, color:'#FFFFFF', fontWeight:'bold'}}>줄서기</Text>
         </ButtonView>
     );
@@ -133,11 +141,59 @@ export default function ClinicDetailView({ route, navigation }) {
             <SectionContent2>보건소 방문 시 자차/도보 이용{"\n"}마스크 착용 필수 (미착용 시 입장 불가){"\n"}진료소 방문 후 일주일동안 자가격리 필수</SectionContent2>
         </Section3View>,
     ];
+
     return (
         <SafeAreaView style={styles.container}>
             <Modalize modalStyle={{ flex: 1 }} ref={modalizeRef} alwaysOpen={550} handlePosition="inside" modalTopOffset={100} scrollViewProps={{ showsVerticalScrollIndicator: false, stickyHeaderIndices: [0] }} FooterComponent={footerButton}>
                 {renderContent()}
             </Modalize>
+            <ConfirmDialog
+                title="지금 줄서기"
+                message={ clinicName+"예약하시겠습니까?\n\n진료 10분전에 꼭 도착해주세요." }
+                messageStyle={{ color:'#0D0D0D', fontSize:16 }}
+                onTouchOutside={ () => setShowConfirm(false) }
+                visible={ showConfirm }
+                dialogStyle={{
+                    width: 300,
+                    height: 220,
+                    backgroundColor:'#FFFFFF',
+                    borderRadius: 12,
+                    alignSelf: 'center',
+                }}
+                contentStyle={{
+                    alignSelf:'flex-end'
+                }}
+                negativeButton={
+                    {
+                        title: "취소",
+                        // disabled: true,
+                        titleStyle: {
+                            color: "#0D0D0D",
+                            colorDisabled: "#0D0D0D",
+                        },
+                        style: {
+                            backgroundColor: "transparent",
+                            backgroundColorDisabled: "transparent",
+                            marginBottom:0                        
+                        },
+                        onPress: () => setShowConfirm(false)
+                    }
+                }
+                positiveButton={
+                    {
+                        title: "YES",
+                        // onPress: this.optionYes,
+                        titleStyle: {
+                            color:"#21D287",
+                            colorDisabled: "#21D287",
+                        },
+                        style: {
+                            backgroundColor: "transparent",
+                            backgroundColorDisabled: "transparent",
+                        }
+                    }
+                }
+            />
         </SafeAreaView>
     );
 }

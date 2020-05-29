@@ -1,8 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, AsyncStorage } from 'react-native';
+import { StyleSheet, AsyncStorage, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 
 import SignIn from './screens/SignIn';
 import Login from './screens/Login';
@@ -16,7 +18,7 @@ const AuthStack = createStackNavigator();
 const AuthStackScreen = () => (
   <AuthStack.Navigator>
     <AuthStack.Screen name="Login" component={ Login } options={ { headerShown: false} }/>
-    <AuthStack.Screen name="SignIn" component= { SignIn } options={ { headerBackTitle: "", headerTitle: ""} }/>
+    <AuthStack.Screen name="SignIn" component= { SignIn } options={ { headerShown: false} }/>
   </AuthStack.Navigator>
 );
 
@@ -30,7 +32,7 @@ export default function App() {
       setIsLoading(!isLoading);
       const getToken = AsyncStorage.getItem('token');
       console.log('/////token'+getToken);
-      setUser({});
+      // setUser({});
     }, 500);
   }, []);
 

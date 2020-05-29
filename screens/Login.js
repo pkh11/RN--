@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, Image, AsyncStorage } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
-import KakaoLogins from '@react-native-seoul/kakao-login';
+/*
 
 if (!KakaoLogins) {
     console.error('Module is Not Linked');
 }
-
+*/
 const logCallback = ( log, callback ) => {
     console.log(log);
     callback;
@@ -25,6 +24,7 @@ export default function Login ( {navigation} ) {
     const [loginLoading, setLoginLoading] = useState(false);
     const [token, setToken] = useState(TOKEN_EMPTY);
 
+    /*
     const kakaoLogin = () => {
         logCallback('Login Start', setLoginLoading(true));
 
@@ -42,7 +42,16 @@ export default function Login ( {navigation} ) {
             }
         });
     };
+    */
 
+    kakaoLogin = async() => {
+        try {
+            // const result = await RNKakao.login();
+            console.log('////// kakao Login : ');
+        } catch (e) {
+            console.log('error');
+        }
+    }
     return (
         <SafeAreaView style={ {flex:1, flexDirection:'column', alignItems:'center', backgroundColor: '#3BCE83', height: '100%'} }>
             {/* <LottieView source={require('../resources/22605-smooth-swinging.json')} autoPlay loop></LottieView> */}
@@ -51,7 +60,7 @@ export default function Login ( {navigation} ) {
             <Image source={require('../resources/titlelogo/titlelogo.png')}/>
             <Text style={{flex:1, marginTop:8, color:'#FFFFFF', fontSize:16}}>안전한 대기를 위한 대기서비스</Text>
             <View style={{width:'100%', marginBottom:20, justifyContent:'center'}}>
-                <TouchableOpacity style={{marginLeft:20, marginRight:20, marginBottom:10, height:56, justifyContent:'center', alignItems:'center', alignContent:'center', borderRadius:8, backgroundColor:'#FCE34C' }} onPress={ () => null }>
+                <TouchableOpacity style={{marginLeft:20, marginRight:20, marginBottom:10, height:56, justifyContent:'center', alignItems:'center', alignContent:'center', borderRadius:8, backgroundColor:'#FCE34C' }} onPress={ () => kakaoLogin() }>
                     <Text style={{ color:'#000000', fontWeight:'bold', fontSize:14 }}>카카오</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{marginLeft:20, marginRight:20, marginBottom:10, height:56, justifyContent:'center', alignItems:'center', alignContent:'center', borderRadius:8, backgroundColor:'#4969AD' }} onPress={ () => null }>

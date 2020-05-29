@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef  } from 'react';
 import { StyleSheet, Alert, Text, View, Button, SafeAreaView, ScrollView, FlatList, Image } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { ConfirmDialog } from 'react-native-simple-dialogs';
 import apiConfig from '../config/APIConfig';
 import axios from 'axios';
 import * as Location from 'expo-location';
@@ -13,7 +14,7 @@ import COVIDInfoView from './COVIDInfoView';
 import QnAView from './QnAView';
 import NoticeView from './NoticeView';
 import PrivacyView from './PrivacyView';
-import DialogView from "./DialogView"
+// import Dialog from './DialogView';
 
 const Drawer = createDrawerNavigator();
 const DrawerScreen = ({ navigation }) => (
@@ -57,103 +58,19 @@ function ImageView() {
 
 // clinic list
 function ListHomeScreen({ navigation }) {
+    const [showConfirm, setShowConfirm] = useState(false);
     const [list, setList] = useState([]);
     const [location, setLocation] = useState(null);
-/*
-    useEffect(() => {
-        (async () => {
-            const response = await Location.requestPermissionsAsync();
-            if ( response.status !== 'granted' ){
-                console.log('error');
-            }
+    const [clinicName, setClinicName] = useState("");
 
-            const location = await Location.getCurrentPositionAsync({});
-            console.log(JSON.stringify(location));
-        })();
-        return () => {
-            Location.stopLocationUpdatesAsync();
-        };  
-    },[]);
-*/
-    const loadData = async () => {
-        // TODO: api call 모듈화
-        let latitude = location.coords.latitude;
-        let longitude = location.coords.longitude;
-
-        axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/1?lat=37.566635&lon=126.977962')
-            .then(function (response) {
-                const resultData = response.data.data;
-                setList(resultData);})
-            .catch(function (error) {
-                console.log(error);
-        });
-/*
-        let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/1?lat=37.566635&lon=126.977962', {
-            // params: {
-            //     // TODO: 내 위치값 세팅
-            //     // lat: 37.566635,
-            //     // lon: 126.977962
-            //     lat: 37.566635,
-            //     lon: 126.977962
-            // }
-        }).then(function (response) {
-            const resultData = response.data.data;
-            setList(resultData);
-        }).catch(function (error) {
-            console.log(error);
-        });
-        */
-    };
-
-    dialogPopView = () => {
-        <DialogView/>
+    openConfirm = (show, index) => {
+        // console.log("index : "+JSON.stringify(list[index].clinicName));
+        const name = JSON.stringify(list[index].clinicName);
+        const replaceName = name.replace(/"/g,'');
+        setClinicName(replaceName);
+        setShowConfirm(show);
     }
 
-
-    const renderContent = () => [
-        <View style={{backgroundColor:'#FFFFFF', height:'100%'}}>
-            <View style={{backgroundColor:'#F2F2F2', flexDirection:'row',alignItems:'center', justifyContent: 'space-between', height:56, borderRadius:28, marginTop:36 ,marginLeft:20, marginRight:20, marginBottom:28}}>
-                <Text style={{marginLeft:20}}>서울시 종로구</Text>
-                <TouchableOpacity style={{marginRight:16}} onPress={() => alert('position')}>
-                    <Image source={require('../resources/ic_gps/ic_gps.png')}></Image>
-                </TouchableOpacity>
-            </View>
-            <View style={{flexDirection:'row',alignItems:'center', justifyContent: 'space-between', fontSize:14, color:'#000000' ,height:17, marginLeft:20, marginRight:20, marginBottom:12}}>
-                <Text style={{fontWeight:'bold'}}>검색 결과 {list.length} 건</Text>
-                <Text onPress={() => alert('position')}>거리순</Text>
-            </View>
-            <FlatList style={{borderTopLeftRadius:12, borderTopRightRadius:12}} data={ list } key={list.clinicId} renderItem={ ({ item }) => 
-                <TouchableOpacity style={{ marginLeft:20, marginRight:20}} onPress={ () =>  navigation.navigate("ClinicDetailView", { clinickInfo: item }) }>
-                    <View style={{borderWidth:1, borderColor:'#F2F2F2'}}/>
-                    <View style={ { borderRadius:8 } }>
-                        <View style={{marginTop:20, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
-                            <Text style={{fontWeight:'bold', color:'#0D0D0D', fontSize:18}}>대기자 5명</Text>
-                            <TouchableOpacity style={{width:60, height:32, backgroundColor:'#DEF7EB', borderRadius:6, alignItems:'center', justifyContent:'center'}} 
-                                            onPress={ () => Alert.alert(
-                                                            "지금 줄서기",`${item.clinicName}`+'에 예약하시겠습니까?',
-                                                            [
-                                                                {
-                                                                    text:"cancel",
-                                                                    onPress:()=>console.log('cancel'),
-                                                                    style:'cancel'
-                                                                },
-                                                                {
-                                                                    text:"ok",
-                                                                    onPress:()=>console.log('ok')
-                                                                }
-                                                            ])}>
-                                <Text style={{color:'#21D287'}}>줄서기</Text>
-                            </TouchableOpacity>
-                        </View>
-                        <Text style={{marginTop:9, color:'#0D0D0D'}}>{item.clinicName}</Text>
-                        <Text style={{marginTop:4, marginBottom:20, color:'#4D4D4D'}}>{item.clinicLocation}</Text>
-                    </View>
-                </TouchableOpacity>}>
-            </FlatList> 
-        </View>
-        
-    ];
-
     useEffect(() => {
         (async () => {
             const response = await Location.requestPermissionsAsync();
@@ -170,8 +87,9 @@ function ListHomeScreen({ navigation }) {
     },[]);
 
     useEffect(() => {
-        // loadData();      
-        let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/1', {
+        // loadData(); 
+        console.log("useEffect");    
+        let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/5', {
             params: {
                 // TODO: 내 위치값 세팅
                 // lat: 37.566635,
@@ -181,12 +99,94 @@ function ListHomeScreen({ navigation }) {
             }
         }).then(function (response) {
             const resultData = response.data.data;
+            console.log('resultData '+resultData[0]);
+            setClinicName(resultData.clinicName);
             setList(resultData);
         }).catch(function (error) {
             console.log(error);
         });
     },[]);
 
+    const renderContent = () => [
+        <View style={{backgroundColor:'#FFFFFF', height:'100%'}}>
+            <View style={{backgroundColor:'#F2F2F2', flexDirection:'row',alignItems:'center', justifyContent: 'space-between', height:56, borderRadius:28, marginTop:22 ,marginLeft:20, marginRight:20, marginBottom:28}}>
+                <Text style={{marginLeft:20}}>서울시 종로구</Text>
+                <TouchableOpacity style={{marginRight:16}} onPress={() => alert('position')}>
+                    <Image source={require('../resources/ic_gps/ic_gps.png')}></Image>
+                </TouchableOpacity>
+            </View>
+            <View style={{flexDirection:'row',alignItems:'center', justifyContent: 'space-between', fontSize:14, color:'#000000' ,height:17, marginLeft:20, marginRight:20, marginBottom:12}}>
+                <Text style={{fontWeight:'bold'}}>검색 결과 {list.length} 건</Text>
+                <Text onPress={() => alert('position')}>거리순</Text>
+            </View>
+            <FlatList style={{borderTopLeftRadius:12, borderTopRightRadius:12}} data={ list } key={ list.clinicId } renderItem={ ({ item, index }) => 
+                <TouchableOpacity style={{ marginLeft:20, marginRight:20}} onPress={ () =>  navigation.navigate("ClinicDetailView", { clinickInfo: item }) }>
+                    <View style={{borderWidth:1, borderColor:'#F2F2F2'}}/>
+                    <View style={ { borderRadius:8 } }>
+                        <View style={{marginTop:20, flexDirection:'row', alignItems:'center', justifyContent:'space-between'}}>
+                            <Text style={{fontWeight:'bold', color:'#0D0D0D', fontSize:18}}>대기자 {item.clinicWaitCount}명</Text>
+                            <TouchableOpacity style={{width:60, height:32, backgroundColor:'#DEF7EB', borderRadius:6, alignItems:'center', justifyContent:'center'}} 
+                                            onPress={ () => openConfirm(true, index) }>
+                                <Text style={{color:'#21D287'}}>줄서기</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={{marginTop:9, color:'#0D0D0D'}}>{item.clinicName}</Text>
+                        <Text style={{marginTop:4, marginBottom:20, color:'#4D4D4D'}}>{item.clinicLocation}</Text>
+                    </View>
+                </TouchableOpacity>}>
+            </FlatList> 
+
+            <ConfirmDialog
+                title="지금 줄서기"
+                message={ clinicName+"에 예약하시겠습니까?\n\n진료 10분전에 꼭 도착해주세요." }
+                messageStyle={{ color:'#0D0D0D', fontSize:16 }}
+                onTouchOutside={ () => setShowConfirm(false) }
+                visible={ showConfirm }
+                dialogStyle={{
+                    width: 300,
+                    height: 220,
+                    backgroundColor:'#FFFFFF',
+                    borderRadius: 12,
+                    alignSelf: 'center',
+                }}
+                contentStyle={{
+                    alignSelf:'flex-end'
+                }}
+                negativeButton={
+                    {
+                        title: "취소",
+                        // disabled: true,
+                        titleStyle: {
+                            color: "#0D0D0D",
+                            colorDisabled: "#0D0D0D",
+                        },
+                        style: {
+                            backgroundColor: "transparent",
+                            backgroundColorDisabled: "transparent",
+                            marginBottom:0                        
+                        },
+                        onPress: () => setShowConfirm(false)
+                    }
+                }
+                positiveButton={
+                    {
+                        title: "YES",
+                        // onPress: this.optionYes,
+                        titleStyle: {
+                            color:"#21D287",
+                            colorDisabled: "#21D287",
+                        },
+                        style: {
+                            backgroundColor: "transparent",
+                            backgroundColorDisabled: "transparent",
+                        }
+                    }
+                }
+            />
+            
+        </View>
+        
+    ];
 
     return (
         <SafeAreaView style={{flex:1}}>
