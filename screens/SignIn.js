@@ -6,13 +6,14 @@ import axios from 'axios';
 const TOKEN_EMPTY = 'token has not fetched';
 
 const SignInStack = createStackNavigator();
-const SignInStackScreen = () => {
+const SignInStackScreen = ({navigation}) => {
     const [token, setToken] = useState(TOKEN_EMPTY);
+    const [user, setUser] = useState(null);
     const [signInInfo, setSingInInfo] = useState({
         userId: '',
         userPassword: '',
         userName: '',
-        userPhoneNumber: '',
+        userPhoneNumber: '010-9500-2675',
         userType: 'U'
     });
     const [isServiceAgree, setIsServiceAgree] = useState(false);
@@ -36,7 +37,7 @@ const SignInStackScreen = () => {
         }
     };
 
-    setLogin = () => {
+    setLogin = (navigation) => {
         // validation check
         if (!isServiceAgree || !isPrivacyAgree) {
             alert('약관 동의를 해주세요.');
@@ -57,26 +58,35 @@ const SignInStackScreen = () => {
             userId: id,
             userPassword: password,
             userName: name,
-            userPhoneNumber: phoneNumber,
+            userPhoneNumber: '010-9500-2675',
             userType: userType
         })
         .then(function (response) {
+            console.log(JSON.stringify(response.data));
             const code = response.data.code;
-            const status = response.data.status;
-            const message = response.data.message;
-            const getToken = '';
+            console.log('***** code : '+code);
 
-            if ( code === '1' ){
-                getToken = response.data.token;
+            if ( code === 1 ){
+                const userInfo = response.data.data.user;
+                setUser(userInfo);
 
+                const getToken = response.data.data.token;
                 // TODO: sage accessToken
                 setToken(getToken);
+
+                console.log('///// here is user : '+userInfo);
+                console.log('///// here is token : '+token);
                 AsyncStorage.setItem('token', token);
-                
+                AsyncStorage.setItem('userInfo', userInfo);
+
+                navigation.navigate('LoginForm');
                 // TODO: go to login page
+                // this.props.navigation.navigate('Login');
 
+            }else if ( code === 0 ){
+                const status = response.data.status;
+                const message = response.data.message;
 
-            }else if ( code === '0' ){
                 alert(message);
                 return;
             }
@@ -95,7 +105,7 @@ const SignInStackScreen = () => {
                     <Text style={{ color: '#0D0D0D', fontSize:24, fontWeight:'bold', justifyContent:'flex-start' }}>회원가입</Text>
                     <TextInput style={{ marginTop:44, height:56, width:'100%', marginLeft:12}} placeholder="이메일 입력" placeholderTextColor="#B3B3B3" autoCapitalize="none" name="userId" onChangeText={ (text) => setUserInfo(text, 'userId') }></TextInput>
                     <View style={{borderWidth:1, borderColor:'#E5E5E5'}}/>
-                    <TextInput style={{ marginTop:10, height:56, width:'100%', marginLeft:12}} placeholder="비밀번호 (알파벳 대/소문자, 숫자 포함한 10자이상)" placeholderTextColor="#B3B3B3" autoCapitalize="none" name="userPassword" type="text" onChangeText={(text) => setUserInfo(text, 'userPassword')}></TextInput>
+                    <TextInput style={{ marginTop:10, height:56, width:'100%', marginLeft:12}} secureTextEntry={ true } placeholder="비밀번호 (알파벳 대/소문자, 숫자 포함한 10자이상)" placeholderTextColor="#B3B3B3" autoCapitalize="none" name="userPassword" type="text" onChangeText={(text) => setUserInfo(text, 'userPassword')}></TextInput>
                     <View style={{borderWidth:1, borderColor:'#E5E5E5'}}/>
                     <TextInput style={{ marginTop:10, height:56, width:'100%', marginLeft:12}} placeholder="이름 (실명 입력)" placeholderTextColor="#B3B3B3" autoCapitalize="none" name="userName" type="text" onChangeText={(text) => setUserInfo(text, 'userName')}></TextInput>
                     <View style={{borderWidth:1, borderColor:'#E5E5E5'}}/>

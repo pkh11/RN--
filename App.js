@@ -11,14 +11,18 @@ import Login from './screens/Login';
 import ClinicList from './screens/ClinicList';
 import ClinicDetailView from './screens/ClinicDetailView';
 import Splash from "./screens/Splash";
+import LoginForm from './screens/LoginForm';
 
 
 const Stack = createStackNavigator();
 const AuthStack = createStackNavigator();
-const AuthStackScreen = () => (
+const AuthStackScreen = (navigation) => (
   <AuthStack.Navigator>
     <AuthStack.Screen name="Login" component={ Login } options={ { headerShown: false} }/>
     <AuthStack.Screen name="SignIn" component= { SignIn } options={ { headerShown: false} }/>
+    <AuthStack.Screen name="LoginForm" component={ LoginForm } options={ { headerShown: false } }/>
+    <AuthStack.Screen name="ClinicList" component={ ClinicList } options={ { headerShown: false} } />
+    <AuthStack.Screen name="ClinicDetailView" component={ ClinicDetailView } options={({route}) => { return { headerBackTitle: route.params.clinickInfo.clinicName, headerTitle: null, headerTintColor: '#0D0D0D' }; } }></AuthStack.Screen> 
   </AuthStack.Navigator>
 );
 
@@ -31,15 +35,17 @@ export default function App() {
     setTimeout(() => {
       setIsLoading(!isLoading);
       const getToken = AsyncStorage.getItem('token');
-      console.log('/////token'+getToken);
-      // setUser({});
+      const getUserInfo = AsyncStorage.getItem('userInfo');
+
+      console.log('[App.js] token'+JSON.stringify(getToken));
+      console.log('[App.js] userInfo'+JSON.stringify(getUserInfo));
+      // setUser(getToken);
     }, 500);
   }, []);
 
   return (
     <NavigationContainer>
-      {isLoading ? <Splash /> : 
-      user ?  <Stack.Navigator initialRouteName="ClinicList"> 
+      {user ?  <Stack.Navigator initialRouteName="ClinicList"> 
                 <Stack.Screen name="Cliniclist" component={ ClinicList } options={ { headerShown: false } }></Stack.Screen>
                 <Stack.Screen name="ClinicDetailView" component={ ClinicDetailView } options={({route}) => { return { headerBackTitle: route.params.clinickInfo.clinicName, headerTitle: null, headerTintColor: '#0D0D0D' }; } }></Stack.Screen> 
               </Stack.Navigator> 

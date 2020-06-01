@@ -10,7 +10,11 @@ const NoticeStackScreen = () => {
     const [dataList, setDataList] = useState(null);
     const loadNoticeData = async () => {
         // TODO: api call 모듈화
-        let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/notice')
+        let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/notice' , {
+            headers : {
+                Authorization : "Bearer "+"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJrLmt5b29uaG9Aam9pbnMuY29tIiwiZXhwIjoxNTkyMTgwMjU5LCJpYXQiOjE1OTA5NzA2NTl9.WVqN2jI6AgZ5rg3TFTBbNZ26ICIY9zoEqaAMQFMQ9_pIoA3f0YzVwGaJPS9lzRRRqLmQrEzhTs0v0_lzBladlg"
+            }
+        })
         .then(function (response) {
             const resultData = response.data.data;
             console.log(resultData);

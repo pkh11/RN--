@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
-import { StyleSheet, Alert, Text, View, Button, SafeAreaView, ScrollView, FlatList, Image } from 'react-native';
+import { StyleSheet, Alert, Text, View, Button, SafeAreaView, ScrollView, FlatList, Image, AsyncStorage } from 'react-native';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
@@ -63,6 +63,8 @@ function ListHomeScreen({ navigation }) {
     const [location, setLocation] = useState(null);
     const [clinicName, setClinicName] = useState("");
 
+    AsyncStorage.getItem("userInfo").then((value) => alert(value));
+
     openConfirm = (show, index) => {
         // console.log("index : "+JSON.stringify(list[index].clinicName));
         const name = JSON.stringify(list[index].clinicName);
@@ -90,6 +92,9 @@ function ListHomeScreen({ navigation }) {
         // loadData(); 
         console.log("useEffect");    
         let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/5', {
+            headers : {
+                Authorization : "Bearer "+"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJrLmt5b29uaG9Aam9pbnMuY29tIiwiZXhwIjoxNTkyMTgwMjU5LCJpYXQiOjE1OTA5NzA2NTl9.WVqN2jI6AgZ5rg3TFTBbNZ26ICIY9zoEqaAMQFMQ9_pIoA3f0YzVwGaJPS9lzRRRqLmQrEzhTs0v0_lzBladlg"
+            },
             params: {
                 // TODO: 내 위치값 세팅
                 // lat: 37.566635,
@@ -138,7 +143,7 @@ function ListHomeScreen({ navigation }) {
 
             <ConfirmDialog
                 title="지금 줄서기"
-                message={ clinicName+"에 예약하시겠습니까?\n\n진료 10분전에 꼭 도착해주세요." }
+                message={ clinicName+"에 예약하시겠습니까?\n\n진료 10분전에 꼭 도착해주세요.\n\n" }
                 messageStyle={{ color:'#0D0D0D', fontSize:16 }}
                 onTouchOutside={ () => setShowConfirm(false) }
                 visible={ showConfirm }
@@ -170,7 +175,7 @@ function ListHomeScreen({ navigation }) {
                 }
                 positiveButton={
                     {
-                        title: "YES",
+                        title: "확인",
                         // onPress: this.optionYes,
                         titleStyle: {
                             color:"#21D287",
