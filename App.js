@@ -36,9 +36,6 @@ export default function App() {
       setIsLoading(!isLoading);
       const getToken = AsyncStorage.getItem('token');
       const getUserInfo = AsyncStorage.getItem('userInfo');
-
-      console.log('[App.js] token'+JSON.stringify(getToken));
-      console.log('[App.js] userInfo'+JSON.stringify(getUserInfo));
       // setUser(getToken);
     }, 500);
   }, []);

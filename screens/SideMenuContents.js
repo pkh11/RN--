@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Switch, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, ScrollView, Switch, TouchableOpacity, Image, AsyncStorage } from 'react-native';
 import styled from 'styled-components';
 import { DrawerActions } from '@react-navigation/native';
-
+import axios from 'axios';
 
 const SectionView = styled.View`
     flex:1;
@@ -46,6 +46,10 @@ const LogoutText = styled.Text`
 
 export default function SideMenuContents ( {props, navigation} ) {
 
+    goLogout = (navigation) => {
+        AsyncStorage.removeItem('token');
+        navigation.navigate('Login');
+    }
     /*
     const [alarmActive, setAlarmActive] = useState(false);
 
@@ -67,7 +71,7 @@ export default function SideMenuContents ( {props, navigation} ) {
                 <NameText>박균호</NameText>
                 <RowView>
                     <SectionContent>연결된 계정</SectionContent>
-                    <SectionContent>카카오</SectionContent>
+                    <SectionContent>일반</SectionContent>
                 </RowView>
                 <SectionContent>내 현황</SectionContent>
                 <SectionContent onPress={ () => navigation.navigate('COVIDInfoView')}>코로나 정보</SectionContent>
@@ -84,7 +88,7 @@ export default function SideMenuContents ( {props, navigation} ) {
                 <SectionContent>버전정보</SectionContent>
                 <SectionContent onPress={ () => navigation.navigate('PrivacyView')}>개인정보 처리방침</SectionContent>
             </SectionView>
-            <LogoutView onPress={ () => alert('로그아웃') }>
+            <LogoutView onPress={ () => goLogout(navigation) }>
                 <LogoutText>로그아웃</LogoutText>
             </LogoutView>
         </SafeAreaView>

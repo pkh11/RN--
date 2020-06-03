@@ -34,14 +34,20 @@ const LoginFormStackScreen = ({navigation}) => {
             console.log('[LoginForm] code : '+code);
 
             if ( code === 1 ){
-                const token = response.data.token;
+                const token = response.data.data.token;
+                const user = response.data.data.user;
                 // TODO: save accessToken
-                console.log('[LoginForm] token : '+JSON.stringify(token));
-                // AsyncStorage.setItem('token', token);
-                
-                // TODO: go to login page
+                AsyncStorage.setItem('token', JSON.stringify(token));
+                AsyncStorage.setItem('userInfo', JSON.stringify(user));
+
+
+                AsyncStorage.getItem('token').then((value) => {
+                    const tokenValue = JSON.parse(value);
+                    console.log('tokenValue : ', tokenValue);
+                });
+                console.log('token', JSON.stringify(token));
                 navigation.navigate('ClinicList');
-                // navigation.goBack;
+                
             }else if ( code === 0 ){
                 const message = response.message;
                 alert(message);

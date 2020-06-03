@@ -74,10 +74,9 @@ const SignInStackScreen = ({navigation}) => {
                 // TODO: sage accessToken
                 setToken(getToken);
 
-                console.log('///// here is user : '+userInfo);
-                console.log('///// here is token : '+token);
-                AsyncStorage.setItem('token', token);
-                AsyncStorage.setItem('userInfo', userInfo);
+                console.log('///// here is token : '+JSON.stringify(token));
+                AsyncStorage.setItem('token', JSON.stringify(token));
+                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
 
                 navigation.navigate('LoginForm');
                 // TODO: go to login page

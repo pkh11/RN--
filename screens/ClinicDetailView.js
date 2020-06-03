@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { StyleSheet, Text, View, SafeAreaView, AsyncStorage } from 'react-native';
 import { Modalize } from 'react-native-modalize';
-import styled from 'styled-components';
 import { ConfirmDialog } from 'react-native-simple-dialogs';
+import styled from 'styled-components';
+import axios from 'axios';
 
 const Container = styled.View`
     flex: 1;
@@ -62,6 +63,8 @@ const ButtonView = styled.TouchableOpacity`
 `;
 
 export default function ClinicDetailView({ route, navigation }) {
+    const [userId, setUserId] = useState('');
+    const [userToken, setUserToken] = useState('');
     const item = route.params.clinickInfo;
     const id = item.clinicId;
     const clinicName = item.clinicName;
@@ -74,6 +77,17 @@ export default function ClinicDetailView({ route, navigation }) {
             modalizeRef.current.close(dest);
         }
     };
+
+    useEffect(() => {
+        AsyncStorage.getItem('userInfo').then((value) => {
+            const parseValue = JSON.parse(value);
+            setUserId(parseValue);
+        });
+        AsyncStorage.getItem('token').then((value) => {
+            setUserToken(JSON.parse(value));
+        });
+    },[]);
+    // console.log('[ClinicDetailView] user : '+JSON.stringify(getUserInfo));
     /*
     "clinicDistance": 0.8488887,
   "clinicId": "C72",
@@ -87,6 +101,35 @@ export default function ClinicDetailView({ route, navigation }) {
   "clinicWaitCount": 2,
   "clinicWorkTime": null,
   */
+    const doWaiting = () => {
+
+        axios.post('http://52.79.243.246:8080/bundaegi/api/line/'+id, {
+            headers : {
+                Authorization : "Bearer "+userToken
+            },
+            params: {
+                userId: userId,
+            }
+        })
+        .then(function (response) {
+            console.log(JSON.stringify(response.data));
+            const code = response.data.code;
+            const message = response.data.msg;
+            console.log('[ClinicDetailView] code : '+code);
+            console.log('[ClinicDetailView] message : '+message);
+            if ( code === 1 ){
+                alert(message);
+            }else if ( code === 0 ){
+                alert(message);
+                return;
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+    }
+
     const [showConfirm, setShowConfirm] = useState(false);
     openConfirm = (show) => {
         setShowConfirm(show);
@@ -190,7 +233,8 @@ export default function ClinicDetailView({ route, navigation }) {
                         style: {
                             backgroundColor: "transparent",
                             backgroundColorDisabled: "transparent",
-                        }
+                        },
+                        onPress: () => doWaiting()
                     }
                 }
             />

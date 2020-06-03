@@ -63,7 +63,10 @@ function ListHomeScreen({ navigation }) {
     const [location, setLocation] = useState(null);
     const [clinicName, setClinicName] = useState("");
 
-    AsyncStorage.getItem("userInfo").then((value) => alert(value));
+
+    getData = async () => {
+        await AsyncStorage.getItem("userInfo").then((value) => alert(value));
+    }
 
     openConfirm = (show, index) => {
         // console.log("index : "+JSON.stringify(list[index].clinicName));
@@ -81,7 +84,6 @@ function ListHomeScreen({ navigation }) {
             }
 
             const location = await Location.getCurrentPositionAsync({});
-            console.log(JSON.stringify(location));
         })();
         return () => {
             Location.stopLocationUpdatesAsync();
@@ -90,7 +92,6 @@ function ListHomeScreen({ navigation }) {
 
     useEffect(() => {
         // loadData(); 
-        console.log("useEffect");    
         let dataList = axios.get('http://52.79.243.246:8080/bundaegi/api/clinic/location/5', {
             headers : {
                 Authorization : "Bearer "+"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJwYXJrLmt5b29uaG9Aam9pbnMuY29tIiwiZXhwIjoxNTkyMTgwMjU5LCJpYXQiOjE1OTA5NzA2NTl9.WVqN2jI6AgZ5rg3TFTBbNZ26ICIY9zoEqaAMQFMQ9_pIoA3f0YzVwGaJPS9lzRRRqLmQrEzhTs0v0_lzBladlg"
