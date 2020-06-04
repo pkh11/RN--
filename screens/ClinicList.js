@@ -150,7 +150,7 @@ function ListHomeScreen({ navigation }) {
                 visible={ showConfirm }
                 dialogStyle={{
                     width: 300,
-                    height: 220,
+                    height: 240,
                     backgroundColor:'#FFFFFF',
                     borderRadius: 12,
                     alignSelf: 'center',

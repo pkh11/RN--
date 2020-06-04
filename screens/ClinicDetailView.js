@@ -87,20 +87,7 @@ export default function ClinicDetailView({ route, navigation }) {
             setUserToken(JSON.parse(value));
         });
     },[]);
-    // console.log('[ClinicDetailView] user : '+JSON.stringify(getUserInfo));
-    /*
-    "clinicDistance": 0.8488887,
-  "clinicId": "C72",
-  "clinicLat": 37.56106,
-  "clinicLocation": "서울특별시 중구 퇴계로115",
-  "clinicLon": 126.98454,
-  "clinicName": "중구보건소 명동선별상담소",
-  "clinicPhoneNumber": "02-3396-5181",
-","clinicPhoneNumber2": "NULL
-  "clinicType": "N",
-  "clinicWaitCount": 2,
-  "clinicWorkTime": null,
-  */
+
     const doWaiting = () => {
 
         axios.post('http://52.79.243.246:8080/bundaegi/api/line/'+id, {
